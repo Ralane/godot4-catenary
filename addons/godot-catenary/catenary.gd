@@ -20,44 +20,52 @@ const _a_search_min_iterations:int = 16
 ## The mesh with the rope-like object spanning the x-axis
 @export var mesh:Mesh:
 	set(value):
-		mesh = value
-		_update_curve();
+		if value != mesh:
+			mesh = value
+
+			_create_mesh_instance()
+			_update_curve()
 		
 ## The end point target
 @export var target_path:NodePath:
 	set(value):
 		target_path = value
-		_update_curve();
+		_target_node = null
+
+		_update_curve()
 
 ## Whether to track the target node ingame using process
 @export var track_target:bool = true:
 	set(value):
 		track_target = value
-		_update_curve();
+		set_process(track_target or Engine.is_editor_hint())
 		
 ## The real-world length of the catenary (limited by the distance between the start/end point)
 @export var length:float = 5.0:
 	set(value):
 		length = value
-		_update_curve();
+		_update_curve()
 
 ## The scale multiplier of the yz-axes of the mesh
 @export_range(0.01, 10, 0.01) var width = 1.0:
 	set(value):
 		width = value
-		_update_curve();
+		if _material != null:
+			_material.set_shader_parameter("width", width)
 		
 ## The catenary swing angle in radians
 @export_range(0, 3.141593) var swing_angle:float = 0.5:
 	set(value):
 		swing_angle = value
-		_update_curve();
+		if _material != null:
+			_material.set_shader_parameter("swing_angle", swing_angle)
 
 ## The catenary swing frequency
 @export_range(0, 10) var swing_frequency:float = 2:
 	set(value):
 		swing_frequency = value
-		_update_curve();
+		if _material != null:
+			_material.set_shader_parameter("swing_frequency", swing_frequency)
 
 ## The target node instance
 var _target_node:Node3D
@@ -70,47 +78,6 @@ var _mesh_instance:MeshInstance3D
 
 ## A temporary catenary material
 var _material:ShaderMaterial
-
-func _set_mesh(v:Mesh) -> void:
-	if v != mesh:
-		mesh = v
-
-		_create_mesh_instance()
-		_update_curve()
-
-func _set_target_path(v:NodePath) -> void:
-	target_path = v
-	_target_node = null
-
-	_update_curve()
-
-func _set_track_target(v:bool) -> void:
-	track_target = v
-	
-	set_process(track_target or Engine.is_editor_hint())
-
-func _set_length(v:float) -> void:
-	length = v
-	
-	_update_curve()
-
-func _set_width(v:float) -> void:
-	width = v
-	
-	if _material != null:
-		_material.set_shader_param("width", width)
-
-func _set_swing_angle(v:float) -> void:
-	swing_angle = v
-	
-	if _material != null:
-		_material.set_shader_param("swing_angle", swing_angle)
-
-func _set_swing_frequency(v:float) -> void:
-	swing_frequency = v
-	
-	if _material != null:
-		_material.set_shader_parameter("swing_frequency", swing_frequency)
 
 func _notification(what) -> void:
 	if what == NOTIFICATION_TRANSFORM_CHANGED:
