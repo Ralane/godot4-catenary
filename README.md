@@ -58,9 +58,6 @@ swing_angle
 
 # The catenary swing frequency
 swing_frequency
-
-# If set, will update the position while in editor. Disable this if editor performance dips.
-run_in_editor
 ```
 
 The length parameter adjusts the actual length of the cable/rope. If the length is longer than the distance between the start and end point, the curve will sag.

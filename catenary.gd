@@ -18,28 +18,46 @@ class_name Catenary
 const _a_search_min_iterations:int = 16
 
 ## The mesh with the rope-like object spanning the x-axis
-@export var mesh:Mesh
-
+@export var mesh:Mesh:
+	set(value):
+		mesh = value
+		_update_curve();
+		
 ## The end point target
-@export var target_path:NodePath
+@export var target_path:NodePath:
+	set(value):
+		target_path = value
+		_update_curve();
 
 ## Whether to track the target node ingame using process
-@export var track_target:bool = true
-
+@export var track_target:bool = true:
+	set(value):
+		track_target = value
+		_update_curve();
+		
 ## The real-world length of the catenary (limited by the distance between the start/end point)
-@export var length:float = 5.0
+@export var length:float = 5.0:
+	set(value):
+		length = value
+		_update_curve();
 
 ## The scale multiplier of the yz-axes of the mesh
-@export_range(0.01, 10, 0.01) var width = 1.0
-
+@export_range(0.01, 10, 0.01) var width = 1.0:
+	set(value):
+		width = value
+		_update_curve();
+		
 ## The catenary swing angle in radians
-@export_range(0, 3.141593) var swing_angle:float = 0.5
+@export_range(0, 3.141593) var swing_angle:float = 0.5:
+	set(value):
+		swing_angle = value
+		_update_curve();
 
 ## The catenary swing frequency
-@export_range(0, 10) var swing_frequency:float = 2
-
-## If set, will update the position while in editor. Disable this if editor performance dips.
-@export var run_in_editor = true;
+@export_range(0, 10) var swing_frequency:float = 2:
+	set(value):
+		swing_frequency = value
+		_update_curve();
 
 ## The target node instance
 var _target_node:Node3D
@@ -158,81 +176,80 @@ func _create_mesh_instance() -> void:
 	_material.set_shader_parameter("normal_scale", material.normal_scale)
 	
 func _update_curve() -> void:
-	if run_in_editor or !Engine.is_editor_hint():
-		# Create a mesh instance if none exists
-		if _mesh_instance == null:
-			_create_mesh_instance()
+	# Create a mesh instance if none exists
+	if _mesh_instance == null:
+		_create_mesh_instance()
 
-		# Get the target node
-		if _target_node == null:
-			if is_inside_tree() and !target_path.is_empty():
-				_target_node = get_node(target_path)
-			else:
-				return
-
-		var start:Vector3 = global_position
-		var target:Vector3 = _target_node.global_position
-
-		_target_position = target
-
-		# Flip start and end point so that p0 is always the lowest
-		var flip:bool = target.y < start.y
-		var p0:Vector3 = target if flip else start
-		var p1:Vector3 = start if flip else target
-
-		# Get the catenary arc length
-		var shift:Vector3 = p1 - p0
-		var l:float = max(shift.length() * 1.0001, length)
-
-		# Approximate the "a" parameter of the catenary expression
-		# See formulas at https://www.alanzucconi.com/2020/12/13/catenary-2/
-
-		var h:float = sqrt(shift.x * shift.x + shift.z * shift.z)
-		var v:float = shift.y
-		var c:float = sqrt(l * l - v * v)
-		
-		if h == 0:
+	# Get the target node
+	if _target_node == null:
+		if is_inside_tree() and !target_path.is_empty():
+			_target_node = get_node(target_path)
+		else:
 			return
 
-		# Exponentially grow "a" range to a maximum of 2^32
-		
-		var a_min:float = 0
-		var a_max:float = 1
+	var start:Vector3 = global_position
+	var target:Vector3 = _target_node.global_position
 
-		var i:int = 0
+	_target_position = target
 
-		while i < 32 and c < 2 * a_max * sinh(h / (2 * a_max)):
-			i += 1
-			a_min = a_max
-			a_max *= 2
+	# Flip start and end point so that p0 is always the lowest
+	var flip:bool = target.y < start.y
+	var p0:Vector3 = target if flip else start
+	var p1:Vector3 = start if flip else target
 
-		# Binary search for "a" parameter
-		
-		i += _a_search_min_iterations
+	# Get the catenary arc length
+	var shift:Vector3 = p1 - p0
+	var l:float = max(shift.length() * 1.0001, length)
 
-		var a:float
+	# Approximate the "a" parameter of the catenary expression
+	# See formulas at https://www.alanzucconi.com/2020/12/13/catenary-2/
 
-		while i > 0:
-			i -= 1
-			a = (a_min + a_max) * 0.5
-			if c < 2 * a * sinh(h / (2 * a)):
-				a_min = a
-			else:
-				a_max = a
+	var h:float = sqrt(shift.x * shift.x + shift.z * shift.z)
+	var v:float = shift.y
+	var c:float = sqrt(l * l - v * v)
+	
+	if h == 0:
+		return
 
-		# Calculate "p" and "q" parameters based on catenary arc length and "a"
-		var p:float = (h - a * log((l + v) / (l - v))) / 2
-		var q:float = (v - l * (1 / tanh(h / (2 * a)))) / 2
+	# Exponentially grow "a" range to a maximum of 2^32
+	
+	var a_min:float = 0
+	var a_max:float = 1
 
-		# Add the catenary arc length to the cull margin (this size is often larger than required)
-		var ref:Node = self
-		if ref is MeshInstance3D:
-			ref.extra_cull_margin = l + 1
-		_mesh_instance.extra_cull_margin = l + 1
+	var i:int = 0
 
-		# Set shader uniforms related to the catenary
-		_material.set_shader_parameter("p0", p0)
-		_material.set_shader_parameter("p1", p1)
-		_material.set_shader_parameter("apq", Vector3(a, p, q))
-		_material.set_shader_parameter("arc_length", l)
-		_material.set_shader_parameter("flip_x", 1.0 if flip else 0.0)
+	while i < 32 and c < 2 * a_max * sinh(h / (2 * a_max)):
+		i += 1
+		a_min = a_max
+		a_max *= 2
+
+	# Binary search for "a" parameter
+	
+	i += _a_search_min_iterations
+
+	var a:float
+
+	while i > 0:
+		i -= 1
+		a = (a_min + a_max) * 0.5
+		if c < 2 * a * sinh(h / (2 * a)):
+			a_min = a
+		else:
+			a_max = a
+
+	# Calculate "p" and "q" parameters based on catenary arc length and "a"
+	var p:float = (h - a * log((l + v) / (l - v))) / 2
+	var q:float = (v - l * (1 / tanh(h / (2 * a)))) / 2
+
+	# Add the catenary arc length to the cull margin (this size is often larger than required)
+	var ref:Node = self
+	if ref is MeshInstance3D:
+		ref.extra_cull_margin = l + 1
+	_mesh_instance.extra_cull_margin = l + 1
+
+	# Set shader uniforms related to the catenary
+	_material.set_shader_parameter("p0", p0)
+	_material.set_shader_parameter("p1", p1)
+	_material.set_shader_parameter("apq", Vector3(a, p, q))
+	_material.set_shader_parameter("arc_length", l)
+	_material.set_shader_parameter("flip_x", 1.0 if flip else 0.0)
