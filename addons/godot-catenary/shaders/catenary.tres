@@ -82,7 +82,7 @@ void vertex() {
     vec3 world = c0 + p0 + swing + vec3(xz.x, 0, xz.y) + up * VERTEX.y * width;
 
     // Transform from world space to view space
-    VERTEX = (INV_VIEW_MATRIX * vec4(world, 1.0)).xyz;
+    VERTEX = (VIEW_MATRIX * vec4(world, 1.0)).xyz;
 }
 
 // These are uniforms and a fragment shader based on the default Godot spatial material

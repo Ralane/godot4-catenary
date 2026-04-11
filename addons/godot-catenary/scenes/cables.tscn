@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://hee6tx1f55g0"]
 
-[ext_resource type="Script" uid="uid://d4strxdbfjog" path="res://addons/godot4-catenary/catenary.gd" id="1"]
-[ext_resource type="ArrayMesh" path="res://addons/godot4-catenary/models/models_Cable.mesh" id="2"]
+[ext_resource type="Script" uid="uid://c6brp35h25366" path="res://addons/godot-catenary/catenary.gd" id="1"]
+[ext_resource type="ArrayMesh" path="res://addons/godot-catenary/models/models_Cable.mesh" id="2"]
 
 [node name="Cables" type="Node3D" unique_id=1437411737]
 
