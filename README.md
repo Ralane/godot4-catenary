@@ -1,6 +1,8 @@
 # godot-catenary
 
-A dynamic catenary node and shader for [Godot engine](https://godotengine.org/) (for hanging chains, ropes etc.).
+A dynamic catenary node and shader for [Godot 4](https://godotengine.org/) (for hanging chains, ropes etc.).
+
+Ported to Godot 4 from the original version https://github.com/chriscavalluzzi/godot-catenary.
 
 > In physics and geometry, a catenary is the curve that an idealized hanging chain or cable assumes under its own weight when supported only at its ends in a uniform gravitational field
 > 
@@ -22,10 +24,14 @@ Notable improvements are:
 
 ## How to use
 
-This repository contains a demo Godot project in the src folder which will demonstrate the usage of the catenary node. To use the node in your own project, simply Copy these two files:
+This repository contains a demo Godot project in the src folder which will demonstrate the usage of the catenary node.
+
+> Note: The catenary will not display properly in the editor, you must run the scenes to view them in action.
+
+To use the node in your own project, simply Copy these two files:
 
 ```
-# scripts/catenary.gd - The GDScript
+# catenary.gd - The GDScript
 # shaders/catenary.tres - The shader
 ```
 

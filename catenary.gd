@@ -1,13 +1,13 @@
 """
-	Asset: Godot Dynamic Catenary
-	File: catenary.gd
-	Description: Node for drawing a catenary between two points using the catenary shader.
-				 Based on algorithms from https://www.alanzucconi.com/2020/12/13/catenary-2/
-	Instructions: The script will create a temporary mesh instance for the catenary.
-				  The position of this node acts as the starting point for the catenary.
-				  Assign the target path to another spatial node which will act as the end point.
-	Repository: https://github.com/Donitzo/godot-catenary
-	License: MIT License
+    Asset: Godot Dynamic Catenary
+    File: catenary.gd
+    Description: Node for drawing a catenary between two points using the catenary shader.
+                 Based on algorithms from https://www.alanzucconi.com/2020/12/13/catenary-2/
+    Instructions: The script will create a temporary mesh instance for the catenary.
+                  The position of this node acts as the starting point for the catenary.
+                  Assign the target path to another spatial node which will act as the end point.
+    Repository: https://github.com/Donitzo/godot-catenary
+    License: MIT License
 """
 
 @tool
@@ -18,25 +18,25 @@ class_name Catenary
 const _a_search_min_iterations:int = 16
 
 ## The mesh with the rope-like object spanning the x-axis
-@export var mesh:Mesh : set = _set_mesh
+@export var mesh:Mesh
 
 ## The end point target
-@export var target_path:NodePath : set = _set_target_path
+@export var target_path:NodePath
 
 ## Whether to track the target node ingame using process
-@export var track_target:bool = true : set = _set_track_target
+@export var track_target:bool = true
 
 ## The real-world length of the catenary (limited by the distance between the start/end point)
-@export var length:float = 5.0 : set = _set_length
+@export var length:float = 5.0
 
 ## The scale multiplier of the yz-axes of the mesh
-@export var width = 1.0 : set = _set_width # (float, 0.01, 10, 0.01)
+@export_range(0.01, 10, 0.01) var width = 1.0
 
 ## The catenary swing angle in radians
-@export var swing_angle:float = 0.5 : set = _set_swing_angle # (float, 3.141593)
+@export_range(0, 3.141593) var swing_angle:float = 0.5
 
 ## The catenary swing frequency
-@export var swing_frequency:float = 2 : set = _set_swing_frequency # (float, 10)
+@export_range(0, 10) var swing_frequency:float = 2
 
 ## The target node instance
 var _target_node:Node3D
@@ -65,29 +65,29 @@ func _set_target_path(v:NodePath) -> void:
 
 func _set_track_target(v:bool) -> void:
 	track_target = v
-
+	
 	set_process(track_target or Engine.is_editor_hint())
 
 func _set_length(v:float) -> void:
 	length = v
-
+	
 	_update_curve()
 
 func _set_width(v:float) -> void:
 	width = v
-
+	
 	if _material != null:
-		_material.set_shader_parameter("width", width)
+		_material.set_shader_param("width", width)
 
 func _set_swing_angle(v:float) -> void:
 	swing_angle = v
-
+	
 	if _material != null:
-		_material.set_shader_parameter("swing_angle", swing_angle)
+		_material.set_shader_param("swing_angle", swing_angle)
 
 func _set_swing_frequency(v:float) -> void:
 	swing_frequency = v
-
+	
 	if _material != null:
 		_material.set_shader_parameter("swing_frequency", swing_frequency)
 
@@ -103,16 +103,13 @@ func _process(_delta:float) -> void:
 		_update_curve()
 
 func _create_mesh_instance() -> void:
-	if mesh == null:
-		return
-
 	# Enable transform notifications for this spatial
 	set_notify_transform(true)
-
+   
 	# Create a catenary material
 	if _material == null:
 		_material = ShaderMaterial.new()
-		_material.shader = preload("res://shaders/catenary.tres")
+		_material.shader = preload("res://addons/godot-catenary-2.0.0/shaders/catenary.tres")
 		_material.set_shader_parameter("width", width)
 		_material.set_shader_parameter("swing_phase_offset", randf_range(0, PI * 2))
 		_material.set_shader_parameter("swing_angle", swing_angle)
@@ -122,14 +119,13 @@ func _create_mesh_instance() -> void:
 	if _mesh_instance != null:
 		remove_child(_mesh_instance)
 
-		_mesh_instance.queue_free()
-
 	# Create the catenary mesh instance as a child node of this spatial.
+	# The mesh instance is an orphan which will not be saved with the scene,
+	# otherwise the override material (+ textures) would be saved with the scene in the editor.
 	_mesh_instance = MeshInstance3D.new()
 	_mesh_instance.name = "Catenary"
 	_mesh_instance.mesh = mesh
 	_mesh_instance.material_override = _material
-	_mesh_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 
 	add_child(_mesh_instance)
 
@@ -146,9 +142,18 @@ func _create_mesh_instance() -> void:
 	var material:StandardMaterial3D = mesh.surface_get_material(0)
 	_material.set_shader_parameter("albedo", material.albedo_color)
 	_material.set_shader_parameter("texture_albedo", material.albedo_texture)
+	_material.set_shader_parameter("specular", material.metallic_specular)
 	_material.set_shader_parameter("metallic", material.metallic)
+	_material.set_shader_parameter("alpha_scissor_threshold", material.alpha_scissor_threshold)
 	_material.set_shader_parameter("roughness", material.roughness)
-
+	_material.set_shader_parameter("texture_metallic", material.metallic_texture)
+	_material.set_shader_parameter("texture_roughness", material.roughness_texture)
+	_material.set_shader_parameter("texture_emission", material.emission_texture)
+	_material.set_shader_parameter("emission", material.emission)
+	_material.set_shader_parameter("emission_energy", material.emission_intensity)
+	_material.set_shader_parameter("texture_normal", material.normal_texture)
+	_material.set_shader_parameter("normal_scale", material.normal_scale)
+	
 func _update_curve() -> void:
 	# Create a mesh instance of none exists
 	if _mesh_instance == null:
@@ -156,7 +161,7 @@ func _update_curve() -> void:
 
 	# Get the target node
 	if _target_node == null:
-		if is_inside_tree() and not target_path.is_empty():
+		if is_inside_tree() and !target_path.is_empty():
 			_target_node = get_node(target_path)
 		else:
 			return
@@ -181,12 +186,12 @@ func _update_curve() -> void:
 	var h:float = sqrt(shift.x * shift.x + shift.z * shift.z)
 	var v:float = shift.y
 	var c:float = sqrt(l * l - v * v)
-
+	
 	if h == 0:
 		return
 
 	# Exponentially grow "a" range to a maximum of 2^32
-
+	
 	var a_min:float = 0
 	var a_max:float = 1
 
@@ -198,7 +203,7 @@ func _update_curve() -> void:
 		a_max *= 2
 
 	# Binary search for "a" parameter
-
+	
 	i += _a_search_min_iterations
 
 	var a:float
