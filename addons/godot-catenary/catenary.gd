@@ -130,7 +130,7 @@ func _create_mesh_instance() -> void:
 	# Create a catenary material
 	if _material == null:
 		_material = ShaderMaterial.new()
-		_material.shader = preload("res://addons/godot4-catenary/shaders/catenary.tres")
+		_material.shader = preload("res://addons/godot-catenary/shaders/catenary.tres")
 		_material.set_shader_parameter("width", width)
 		_material.set_shader_parameter("swing_phase_offset", randf_range(0, PI * 2))
 		_material.set_shader_parameter("swing_angle", swing_angle)
