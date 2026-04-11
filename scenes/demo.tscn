@@ -1,11 +1,11 @@
 [gd_scene format=3 uid="uid://c4hxlfjsuhi1n"]
 
-[ext_resource type="Script" uid="uid://d4strxdbfjog" path="res://addons/godot-catenary-2.0.0/catenary.gd" id="1"]
-[ext_resource type="ArrayMesh" path="res://addons/godot-catenary-2.0.0/models/models_ChainShort.mesh" id="2"]
-[ext_resource type="Script" uid="uid://dgnr20v38k17h" path="res://addons/godot-catenary-2.0.0/scenes/suzanne.gd" id="3"]
-[ext_resource type="ArrayMesh" path="res://addons/godot-catenary-2.0.0/models/models_Room.mesh" id="4"]
-[ext_resource type="ArrayMesh" path="res://addons/godot-catenary-2.0.0/models/models_Chain.mesh" id="5"]
-[ext_resource type="ArrayMesh" path="res://addons/godot-catenary-2.0.0/models/models_Suzanne.mesh" id="6"]
+[ext_resource type="Script" uid="uid://d4strxdbfjog" path="res://addons/godot4-catenary/catenary.gd" id="1"]
+[ext_resource type="ArrayMesh" path="res://addons/godot4-catenary/models/models_ChainShort.mesh" id="2"]
+[ext_resource type="Script" uid="uid://dgnr20v38k17h" path="res://addons/godot4-catenary/scenes/suzanne.gd" id="3"]
+[ext_resource type="ArrayMesh" path="res://addons/godot4-catenary/models/models_Room.mesh" id="4"]
+[ext_resource type="ArrayMesh" path="res://addons/godot4-catenary/models/models_Chain.mesh" id="5"]
+[ext_resource type="ArrayMesh" path="res://addons/godot4-catenary/models/models_Suzanne.mesh" id="6"]
 
 [node name="Spatial" type="Node3D" unique_id=9634456]
 
@@ -99,7 +99,7 @@ width = 0.33
 swing_frequency = 1.0
 
 [node name="Suzanne" type="MeshInstance3D" parent="." unique_id=1074415974]
-transform = Transform3D(0.8337256478838804, 0.36253271430191625, 0.4164965648806172, -0.32945944695274676, 0.9319066407827707, -0.15166649908323154, -0.4431209577984254, -0.01077047765271328, 0.8963959440763228, 0.445916709365884, 1.1929475663154436, 0.3558270164225025)
+transform = Transform3D(0.9576113008922343, -0.018683251597362015, 0.28745376701541603, 0.08848655219182092, 0.9687244071283703, -0.2318172314506433, -0.2741329838795144, 0.24742659195516545, 0.9293163654478522, -0.26594737571840515, 1.4176477039895459, 0.329982198087881)
 mesh = ExtResource("6")
 skeleton = NodePath("")
 script = ExtResource("3")

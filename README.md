@@ -1,6 +1,8 @@
 # godot-catenary
 
-A dynamic catenary node and shader for [Godot engine](https://godotengine.org/) (for hanging chains, ropes etc.).
+A dynamic catenary node and shader for [Godot engine 4](https://godotengine.org/) (for hanging chains, ropes etc.).
+
+Ported to Godot 4 from [Donitzo's original Godot 3 version](https://github.com/Donitzo/godot-catenary).
 
 > In physics and geometry, a catenary is the curve that an idealized hanging chain or cable assumes under its own weight when supported only at its ends in a uniform gravitational field
 > 
@@ -8,7 +10,7 @@ A dynamic catenary node and shader for [Godot engine](https://godotengine.org/) 
 
 Example of the node in action:
 
-# ![Preview](https://github.com/Donitzo/godot-catenary/blob/main/images/preview.gif)
+# ![Preview](https://github.com/Ralane/godot4-catenary/blob/main/images/preview.gif)
 
 ## About
 
@@ -22,10 +24,10 @@ Notable improvements are:
 
 ## How to use
 
-This repository contains a demo Godot project in the src folder which will demonstrate the usage of the catenary node. To use the node in your own project, simply Copy these two files:
+This repository contains a demo Godot project which will demonstrate the usage of the catenary node.
 
 ```
-# scripts/catenary.gd - The GDScript
+# catenary.gd - The GDScript
 # shaders/catenary.tres - The shader
 ```
 
@@ -56,11 +58,14 @@ swing_angle
 
 # The catenary swing frequency
 swing_frequency
+
+# If set, will update the position while in editor. Disable this if editor performance dips.
+run_in_editor
 ```
 
 The length parameter adjusts the actual length of the cable/rope. If the length is longer than the distance between the start and end point, the curve will sag.
 
-# ![Hanging cables](https://github.com/Donitzo/godot-catenary/blob/main/images/screenshot2.png)
+# ![Hanging cables](https://github.com/Ralane/godot4-catenary/blob/main/images/screenshot2.png)
 
 ## Last words
 
