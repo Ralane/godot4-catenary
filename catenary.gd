@@ -6,7 +6,7 @@
     Instructions: The script will create a temporary mesh instance for the catenary.
                   The position of this node acts as the starting point for the catenary.
                   Assign the target path to another spatial node which will act as the end point.
-    Repository: https://github.com/Donitzo/godot-catenary
+    Repository: https://github.com/Ralane/godot4-catenary
     License: MIT License
 """
 
@@ -109,7 +109,7 @@ func _create_mesh_instance() -> void:
 	# Create a catenary material
 	if _material == null:
 		_material = ShaderMaterial.new()
-		_material.shader = preload("res://addons/godot-catenary-2.0.0/shaders/catenary.tres")
+		_material.shader = preload("res://addons/godot4-catenary/shaders/catenary.tres")
 		_material.set_shader_parameter("width", width)
 		_material.set_shader_parameter("swing_phase_offset", randf_range(0, PI * 2))
 		_material.set_shader_parameter("swing_angle", swing_angle)

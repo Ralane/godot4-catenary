@@ -7,7 +7,7 @@ code = "/*
     Description: Shader for rendering hanging and swinging catenaries
                  Based on algorithms from https://www.alanzucconi.com/2020/12/13/catenary-2/
     Instructions: This shader is best initialized by the catenary.gd script.
-    Repository: https://github.com/Donitzo/godot-catenary
+    Repository: https://github.com/Ralane/godot4-catenary
     License: MIT License
 */
 

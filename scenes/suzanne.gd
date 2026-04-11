@@ -1,8 +1,8 @@
 """
     Asset: Godot Dynamic Catenary
     File: suzenne.gd
-    Description: Suzanne go wild.
-    Repository: https://github.com/Donitzo/godot-catenary
+    Description: Suzanne is a model that moves around randomly for the demo.
+    Repository: https://github.com/Ralane/godot4-catenary
     License: MIT License
 """
 
