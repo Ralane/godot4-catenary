@@ -9,7 +9,7 @@
     Repository: https://github.com/Ralane/godot4-catenary
     License: MIT License
 """
-
+@icon("res://addons/godot-catenary/Catenary.svg")
 @tool
 extends Node3D
 class_name Catenary
@@ -19,7 +19,7 @@ const _a_search_min_iterations:int = 16
 
 const _three_sqrt_three = 1.73205080756888;
 
-var previousScale = global_basis.get_scale();
+var previousScale;
 
 ## Whether or not to apply the scale to the width and length
 @export var use_scale = true:
@@ -59,7 +59,7 @@ var previousScale = global_basis.get_scale();
 		_update_curve()
 		
 func get_scaled_length():
-	if(use_scale):
+	if(use_scale and is_inside_tree()):
 		return length * global_basis.get_scale().length() / _three_sqrt_three;
 	return length;
 
@@ -71,7 +71,7 @@ func get_scaled_length():
 			_material.set_shader_parameter("width", get_scaled_width())
 
 func get_scaled_width():
-	if(use_scale):
+	if(use_scale and is_inside_tree()):
 		return width * global_basis.get_scale().length() / _three_sqrt_three;
 	return width;
 	
@@ -106,10 +106,12 @@ func _notification(what) -> void:
 		_update_curve()
 
 func _ready() -> void:
+	previousScale = global_basis.get_scale()
+	_material.set_shader_parameter("width", get_scaled_width())
 	_update_curve()
 
 func _process(_delta:float) -> void:
-	if _target_node != null and (_target_position != _target_node.global_position or (use_scale and global_basis.get_scale() != previousScale)):
+	if _target_node != null and (_target_position != _target_node.global_position or (use_scale and is_inside_tree() and global_basis.get_scale() != previousScale)):
 		_material.set_shader_parameter("width", get_scaled_width())
 		previousScale = global_basis.get_scale();
 		_update_curve()
