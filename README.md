@@ -38,6 +38,9 @@ The catenary node can be used ingame or in the editor, as it is a tool.
 There are a number of parameters to set before the node works:
 
 ```
+## Whether or not to apply the global scale to the width and length
+use_scale
+
 # The mesh with the rope-like object spanning the x-axis
 mesh
 
