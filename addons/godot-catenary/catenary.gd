@@ -17,6 +17,18 @@ class_name Catenary
 ## The minimum number of binary search iterations to find the catenary "a" parameter.
 const _a_search_min_iterations:int = 16
 
+const _three_sqrt_three = 1.73205080756888;
+
+var previousScale = global_basis.get_scale();
+
+## Whether or not to apply the scale to the width and length
+@export var use_scale = true:
+	set(value):
+		use_scale = value;
+		if _material != null:
+			_material.set_shader_parameter("width", get_scaled_width())
+		_update_curve();
+			
 ## The mesh with the rope-like object spanning the x-axis
 @export var mesh:Mesh:
 	set(value):
@@ -45,14 +57,24 @@ const _a_search_min_iterations:int = 16
 	set(value):
 		length = value
 		_update_curve()
+		
+func get_scaled_length():
+	if(use_scale):
+		return length * global_basis.get_scale().length() / _three_sqrt_three;
+	return length;
 
 ## The scale multiplier of the yz-axes of the mesh
 @export_range(0.01, 10, 0.01) var width = 1.0:
 	set(value):
 		width = value
 		if _material != null:
-			_material.set_shader_parameter("width", width)
-		
+			_material.set_shader_parameter("width", get_scaled_width())
+
+func get_scaled_width():
+	if(use_scale):
+		return width * global_basis.get_scale().length() / _three_sqrt_three;
+	return width;
+	
 ## The catenary swing angle in radians
 @export_range(0, 3.141593) var swing_angle:float = 0.5:
 	set(value):
@@ -87,7 +109,9 @@ func _ready() -> void:
 	_update_curve()
 
 func _process(_delta:float) -> void:
-	if _target_node != null and _target_position != _target_node.global_position:
+	if _target_node != null and (_target_position != _target_node.global_position or (use_scale and global_basis.get_scale() != previousScale)):
+		_material.set_shader_parameter("width", get_scaled_width())
+		previousScale = global_basis.get_scale();
 		_update_curve()
 
 func _create_mesh_instance() -> void:
@@ -98,7 +122,7 @@ func _create_mesh_instance() -> void:
 	if _material == null:
 		_material = ShaderMaterial.new()
 		_material.shader = preload("res://addons/godot-catenary/shaders/catenary.tres")
-		_material.set_shader_parameter("width", width)
+		_material.set_shader_parameter("width", get_scaled_width())
 		_material.set_shader_parameter("swing_phase_offset", randf_range(0, PI * 2))
 		_material.set_shader_parameter("swing_angle", swing_angle)
 		_material.set_shader_parameter("swing_frequency", swing_frequency)
@@ -166,7 +190,7 @@ func _update_curve() -> void:
 
 	# Get the catenary arc length
 	var shift:Vector3 = p1 - p0
-	var l:float = max(shift.length() * 1.0001, length)
+	var l:float = max(shift.length() * 1.0001, get_scaled_length())
 
 	# Approximate the "a" parameter of the catenary expression
 	# See formulas at https://www.alanzucconi.com/2020/12/13/catenary-2/
