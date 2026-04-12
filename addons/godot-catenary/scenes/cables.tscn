@@ -14,8 +14,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.24614, 2.38419e-07, 1.0866
 script = ExtResource("1")
 mesh = ExtResource("2")
 target_path = NodePath("../Target0")
-width = 0.7
-swing_frequency = 1.0
+swing_angle = 0.212
+swing_frequency = 0.414
 
 [node name="Cable3" type="Node3D" parent="." unique_id=1718325116]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.07669, 0, -4.33296)
