@@ -99,9 +99,9 @@ target
 
 For convenience, certain fields such as `track_target` or `use_auto_length` have different default values when being used via func_godot, due to typical usage being non-tracking map decor.
 
-# ![Trenchbroom Step 1](https://github.com/Ralane/godot4-catenary/blob/main/images/trenchbroom_step_1.png)
-# ![Trenchbroom Step 2](https://github.com/Ralane/godot4-catenary/blob/main/images/trenchbroom_step_2.png)
-# ![Func_Godot Step 3](https://github.com/Ralane/godot4-catenary/blob/main/images/func_godot_step_3.png)
+# ![Trenchbroom Step 1](https://github.com/Ralane/godot4-catenary/blob/main/images/trenchbroom_step_1.PNG)
+# ![Trenchbroom Step 2](https://github.com/Ralane/godot4-catenary/blob/main/images/trenchbroom_step_2.PNG)
+# ![Func_Godot Step 3](https://github.com/Ralane/godot4-catenary/blob/main/images/func_godot_step_3.PNG)
 
 ## Last words
 
