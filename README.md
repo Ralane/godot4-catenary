@@ -1,10 +1,10 @@
-# godot-catenary
+# godot4-catenary
 
 A dynamic catenary node and shader for [Godot engine 4](https://godotengine.org/) (for hanging chains, ropes etc.).
 
 Also available on the [Godot Asset Library](https://godotengine.org/asset-library/asset/5029).
 
-Ported to Godot 4 from [Donitzo's original Godot 3 version](https://github.com/Donitzo/godot-catenary).
+Ported to Godot 4 from [Donitzo's original Godot 3 version](https://github.com/Donitzo/godot-catenary) with some new features.
 
 > In physics and geometry, a catenary is the curve that an idealized hanging chain or cable assumes under its own weight when supported only at its ends in a uniform gravitational field
 > 
@@ -75,7 +75,7 @@ The func_godot properties can be safely ignored unless using func_godot.
 
 # ![Hanging cables](https://github.com/Ralane/godot4-catenary/blob/main/images/screenshot2.png)
 
-# Func Godot Support
+# Func_godot Support
 
 godot4-catenary comes with func_godot support out of the box.
 
@@ -106,3 +106,4 @@ For convenience, certain fields such as `track_target` or `use_auto_length` have
 ## Last words
 
 I hope you find this tool useful. Please raise an issue if you discover a bug or just have general feedback.
+	
