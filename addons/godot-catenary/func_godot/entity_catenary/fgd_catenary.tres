@@ -1,0 +1,55 @@
+[gd_resource type="Resource" script_class="FuncGodotFGDPointClass" format=3 uid="uid://bf86f4xejed86"]
+
+[ext_resource type="Script" uid="uid://d1nwwgcrner8b" path="res://addons/func_godot/src/fgd/func_godot_fgd_point_class_display_descriptor.gd" id="1_7ksci"]
+[ext_resource type="PackedScene" uid="uid://buso0jb5wvl2j" path="res://addons/godot-catenary/func_godot/entity_catenary/entity_catenary.tscn" id="2_6g83m"]
+[ext_resource type="Script" uid="uid://cxsqwtsqd8w33" path="res://addons/func_godot/src/fgd/func_godot_fgd_point_class.gd" id="3_i84vb"]
+
+[resource]
+script = ExtResource("3_i84vb")
+scene_file = ExtResource("2_6g83m")
+classname = "Catenary"
+description = "Godot4 Catenary
+
+# The path to the mesh file
+mesh_path
+
+# The name of this catenary node.
+targetname
+
+# The name of the target other node.
+# Note that the `target` field will search for any node with that name upon func_godot map build, so it can be used with non-catenary targets (e.g. to tie a rope to a prop entity).
+target
+
+# Whether to track the target node ingame using process
+track_target
+
+# The real-world length of the catenary (limited by the distance between the start/end point)
+length
+
+# The scale multiplier of the yz-axes of the mesh
+width
+
+# Whether or not to apply the global scale to the width and length
+use_scale
+
+# If true, the length will be automatically set to the distance, and the `length` property will be added. Useful for map editors like Trenchbroom that can't easily preview the generated shape.
+use_auto_length
+
+# The catenary swing angle in radians
+swing_angle
+
+# The catenary swing frequency
+swing_frequency"
+class_properties = Dictionary[String, Variant]({
+"length": 5.0,
+"mesh_path": "res://addons/godot-catenary/models/models_Cable.mesh",
+"swing_angle": 0.5,
+"swing_frequency": 0.1,
+"target": "target_catenary_name_1",
+"targetname": "catenary_name_1",
+"track_target": false,
+"use_auto_length": true,
+"use_scale": true,
+"width": 1.0
+})
+auto_apply_to_matching_node_properties = true

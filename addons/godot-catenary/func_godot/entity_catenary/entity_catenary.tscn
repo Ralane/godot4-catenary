@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://buso0jb5wvl2j"]
+
+[ext_resource type="Script" uid="uid://cuqdnmwd4no2f" path="res://addons/godot-catenary/catenary.gd" id="2_fjhsc"]
+[ext_resource type="ArrayMesh" path="res://addons/godot-catenary/models/models_Cable.mesh" id="3_uh3fr"]
+
+[node name="Catenary" type="Node3D" unique_id=1632378334]
+script = ExtResource("2_fjhsc")
+mesh = ExtResource("3_uh3fr")
+track_target = false
+use_auto_length = true
+metadata/_custom_type_script = "uid://cuqdnmwd4no2f"
