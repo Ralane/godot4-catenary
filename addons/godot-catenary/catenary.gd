@@ -20,14 +20,6 @@ const _a_search_min_iterations:int = 16
 const _three_sqrt_three = 1.73205080756888;
 
 var previousScale;
-
-## Whether or not to apply the scale to the width and length
-@export var use_scale = true:
-	set(value):
-		use_scale = value;
-		if _material != null:
-			_material.set_shader_parameter("width", get_scaled_width())
-		_update_curve();
 			
 ## The mesh with the rope-like object spanning the x-axis
 @export var mesh:Mesh:
@@ -46,29 +38,47 @@ var previousScale;
 
 		_update_curve()
 
-## Whether to track the target node ingame using process
+## Whether to track the target node ingame using process. In general, you should enable this for moving entities, and disable it for static props and map decor.
 @export var track_target:bool = true:
 	set(value):
 		track_target = value
 		set_process(track_target or Engine.is_editor_hint())
-		
+
 ## The real-world length of the catenary (limited by the distance between the start/end point)
 @export var length:float = 5.0:
 	set(value):
 		length = value
 		_update_curve()
-		
+
 func get_scaled_length():
+	var autoLength = length;
+	if(use_auto_length):
+		autoLength += _target_node.global_position.distance_to(self.global_position);
+	
 	if(use_scale and is_inside_tree()):
-		return length * global_basis.get_scale().length() / _three_sqrt_three;
-	return length;
+		return autoLength * global_basis.get_scale().length() / _three_sqrt_three;
+	return autoLength;
 
 ## The scale multiplier of the yz-axes of the mesh
-@export_range(0.01, 10, 0.01) var width = 1.0:
+@export var width = 1.0:
 	set(value):
 		width = value
 		if _material != null:
 			_material.set_shader_parameter("width", get_scaled_width())
+
+## If true, the length will be automatically set to the distance, and the `length` property will be added. Useful for map editors like Trenchbroom that can't easily preview the generated shape.
+@export var use_auto_length:bool = false:
+	set(value):
+		use_auto_length = value
+		_update_curve()
+
+## Whether or not to apply the scale to the width and length
+@export var use_scale = true:
+	set(value):
+		use_scale = value;
+		if _material != null:
+			_material.set_shader_parameter("width", get_scaled_width())
+		_update_curve();
 
 func get_scaled_width():
 	if(use_scale and is_inside_tree()):
@@ -89,6 +99,17 @@ func get_scaled_width():
 		if _material != null:
 			_material.set_shader_parameter("swing_frequency", swing_frequency)
 
+## For func_godot support, this is the name of the OTHER node when it is being used as a target
+@export_group("func_godot")
+@export var target_node_name:String = "":
+	set(value):
+		target_node_name = value
+
+## For func_godot support, this is the name of THIS node when being used as a target
+@export var target_name:String = "":
+	set(value):
+		target_name = value
+
 ## The target node instance
 var _target_node:Node3D
 
@@ -107,6 +128,8 @@ func _notification(what) -> void:
 
 func _ready() -> void:
 	previousScale = global_basis.get_scale()
+	_material.set_shader_parameter("swing_angle", swing_angle)
+	_material.set_shader_parameter("swing_frequency", swing_frequency)
 	_material.set_shader_parameter("width", get_scaled_width())
 	_update_curve()
 
@@ -189,6 +212,10 @@ func _update_curve() -> void:
 	var flip:bool = target.y < start.y
 	var p0:Vector3 = target if flip else start
 	var p1:Vector3 = start if flip else target
+	
+	if(p0.x == p1.x and p0.z == p1.z):
+		# If the 2 nodes share an XZ coordinate, the math doesn't work out. Offset them by an infintesimally small point to avoid errors.
+		p0 = p0 + Vector3(0.0001, 0, 0.0001)
 
 	# Get the catenary arc length
 	var shift:Vector3 = p1 - p0
@@ -200,9 +227,8 @@ func _update_curve() -> void:
 	var h:float = sqrt(shift.x * shift.x + shift.z * shift.z)
 	var v:float = shift.y
 	var c:float = sqrt(l * l - v * v)
-	
-	if h == 0:
-		return
+
+	assert(h != 0, "Catenary target distance cannot be determined");
 
 	# Exponentially grow "a" range to a maximum of 2^32
 	
@@ -246,3 +272,25 @@ func _update_curve() -> void:
 	_material.set_shader_parameter("apq", Vector3(a, p, q))
 	_material.set_shader_parameter("arc_length", l)
 	_material.set_shader_parameter("flip_x", 1.0 if flip else 0.0)
+
+
+func _func_godot_apply_properties(entity_properties: Dictionary):
+	mesh = load(entity_properties.get("mesh_path"));
+	use_scale = entity_properties.get("use_scale");
+	track_target = entity_properties.get("track_target");
+	length = entity_properties.get("length");
+	use_auto_length = entity_properties.get("use_auto_length");
+	swing_angle = entity_properties.get("swing_angle");
+	width = entity_properties.get("width");
+	swing_frequency = entity_properties.get("swing_frequency");
+	target_name = entity_properties.get("targetname");
+	target_node_name = entity_properties.get("target");
+	if(target_name != "" and target_name != null):
+		self.name = target_name;
+	
+func _func_godot_build_complete() -> void:
+	if(target_node_name != null and target_node_name != ""):
+		var possibleChildren = get_tree().get_root().find_child(target_node_name, true, false);
+		if(possibleChildren != null):
+			target_path = possibleChildren.get_path();
+		assert(target_path != null, "Catenary entity " + self.name + " could not find target " + self.target_name);
