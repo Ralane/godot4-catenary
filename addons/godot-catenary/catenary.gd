@@ -293,4 +293,4 @@ func _func_godot_build_complete() -> void:
 		var possibleChildren = get_tree().get_root().find_child(target_node_name, true, false);
 		if(possibleChildren != null):
 			target_path = possibleChildren.get_path();
-		assert(target_path != null, "Catenary entity " + self.name + " could not find target " + self.target_name);
+		assert(target_path != null, "Catenary entity " + self.name + " could not find target " + self.target_node_name);
