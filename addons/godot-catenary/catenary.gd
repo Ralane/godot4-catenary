@@ -31,10 +31,9 @@ var previousScale;
 			_update_curve()
 		
 ## The end point target
-@export var target_path:NodePath:
+@export var target_node: Node3D:
 	set(value):
-		target_path = value
-		_target_node = null
+		target_node = value
 
 		_update_curve()
 
@@ -53,7 +52,7 @@ var previousScale;
 func get_scaled_length():
 	var autoLength = length;
 	if(use_auto_length):
-		autoLength += _target_node.global_position.distance_to(self.global_position);
+		autoLength += target_node.global_position.distance_to(self.global_position);
 	
 	if(use_scale and is_inside_tree()):
 		return autoLength * global_basis.get_scale().length() / _three_sqrt_three;
@@ -110,9 +109,6 @@ func get_scaled_width():
 	set(value):
 		target_name = value
 
-## The target node instance
-var _target_node:Node3D
-
 ## The last known target node position
 var _target_position:Vector3
 
@@ -127,6 +123,13 @@ func _notification(what) -> void:
 		_update_curve()
 
 func _ready() -> void:
+	if(target_node == null or !is_inside_tree()):
+		return;
+	
+	# Create a mesh instance if none exists
+	if _mesh_instance == null:
+		_create_mesh_instance()
+	
 	previousScale = global_basis.get_scale()
 	_material.set_shader_parameter("swing_angle", swing_angle)
 	_material.set_shader_parameter("swing_frequency", swing_frequency)
@@ -134,7 +137,10 @@ func _ready() -> void:
 	_update_curve()
 
 func _process(_delta:float) -> void:
-	if _target_node != null and (_target_position != _target_node.global_position or (use_scale and is_inside_tree() and global_basis.get_scale() != previousScale)):
+	if(target_node == null or !is_inside_tree()):
+		return;
+	
+	if (_target_position != target_node.global_position or (use_scale and is_inside_tree() and global_basis.get_scale() != previousScale)):
 		_material.set_shader_parameter("width", get_scaled_width())
 		previousScale = global_basis.get_scale();
 		_update_curve()
@@ -164,7 +170,7 @@ func _create_mesh_instance() -> void:
 	_mesh_instance.mesh = mesh
 	_mesh_instance.material_override = _material
 
-	add_child(_mesh_instance)
+	add_child.call_deferred(_mesh_instance)
 
 	# If no mesh is assigned, just create an empty mesh instance
 	if mesh == null:
@@ -192,19 +198,16 @@ func _create_mesh_instance() -> void:
 	_material.set_shader_parameter("normal_scale", material.normal_scale)
 	
 func _update_curve() -> void:
+	if(target_node == null or !is_inside_tree()):
+		return;
+	
 	# Create a mesh instance if none exists
 	if _mesh_instance == null:
 		_create_mesh_instance()
 
-	# Get the target node
-	if _target_node == null:
-		if is_inside_tree() and !target_path.is_empty():
-			_target_node = get_node(target_path)
-		else:
-			return
 
 	var start:Vector3 = global_position
-	var target:Vector3 = _target_node.global_position
+	var target:Vector3 = target_node.global_position
 
 	_target_position = target
 
@@ -292,5 +295,7 @@ func _func_godot_build_complete() -> void:
 	if(target_node_name != null and target_node_name != ""):
 		var possibleChildren = get_tree().get_root().find_child(target_node_name, true, false);
 		if(possibleChildren != null):
-			target_path = possibleChildren.get_path();
-		assert(target_path != null, "Catenary entity " + self.name + " could not find target " + self.target_node_name);
+			var target_path = possibleChildren.get_path();
+			if is_inside_tree() and !target_path.is_empty():
+				target_node = get_node(target_path)
+		assert(target_node != null, "Catenary entity " + self.name + " could not find target " + self.target_node_name);
