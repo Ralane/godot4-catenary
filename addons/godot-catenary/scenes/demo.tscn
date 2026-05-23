@@ -9,98 +9,98 @@
 
 [node name="Spatial" type="Node3D" unique_id=9634456]
 
-[node name="ChainShort1" type="Node3D" parent="." unique_id=1006661020]
+[node name="ChainShort1" type="Node3D" parent="." unique_id=1006661020 node_paths=PackedStringArray("target_node")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.22958, 2.82718, 3.47717)
 script = ExtResource("1")
 mesh = ExtResource("2")
-target_path = NodePath("../Suzanne/Anchor001")
+target_node = NodePath("../Suzanne")
 length = 4.688
 width = 0.33
 swing_frequency = 1.0
 
-[node name="ChainShort2" type="Node3D" parent="." unique_id=1897491382]
+[node name="ChainShort2" type="Node3D" parent="." unique_id=1897491382 node_paths=PackedStringArray("target_node")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.74517, 2.71859, 3.77425)
 script = ExtResource("1")
 mesh = ExtResource("2")
-target_path = NodePath("../Suzanne/Anchor002")
+target_node = NodePath("../Suzanne")
 length = 4.558
 width = 0.29000000000000004
 swing_angle = 0.224
 swing_frequency = 1.0
 
-[node name="Chain1" type="Node3D" parent="." unique_id=1821140306]
+[node name="Chain1" type="Node3D" parent="." unique_id=1821140306 node_paths=PackedStringArray("target_node")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.17402, 2.86761, -4.05181)
 script = ExtResource("1")
 mesh = ExtResource("5")
-target_path = NodePath("../Suzanne/Anchor000")
+target_node = NodePath("../Suzanne")
 length = 4.026
 width = 0.26
 swing_frequency = 1.0
 
-[node name="Chain2" type="Node3D" parent="." unique_id=1788690898]
+[node name="Chain2" type="Node3D" parent="." unique_id=1788690898 node_paths=PackedStringArray("target_node")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.91698, 2.83535, 0.0443848)
 script = ExtResource("1")
 mesh = ExtResource("5")
-target_path = NodePath("../Suzanne/Anchor003")
+target_node = NodePath("../Suzanne")
 length = 3.888
 width = 0.33
 swing_frequency = 1.0
 
-[node name="Chain3" type="Node3D" parent="." unique_id=1286645781]
+[node name="Chain3" type="Node3D" parent="." unique_id=1286645781 node_paths=PackedStringArray("target_node")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.04294, 2.86978, 2.58682)
 script = ExtResource("1")
 mesh = ExtResource("5")
-target_path = NodePath("../Suzanne/Anchor004")
+target_node = NodePath("../Suzanne")
 length = 4.809
 width = 0.25
 swing_frequency = 1.0
 
-[node name="Chain4" type="Node3D" parent="." unique_id=2046197718]
+[node name="Chain4" type="Node3D" parent="." unique_id=2046197718 node_paths=PackedStringArray("target_node")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.05024, 3.25621, -1.74377)
 script = ExtResource("1")
 mesh = ExtResource("5")
-target_path = NodePath("../Suzanne/Anchor005")
+target_node = NodePath("../Suzanne")
 length = 4.187
 width = 0.33
 swing_frequency = 1.0
 
-[node name="Chain5" type="Node3D" parent="." unique_id=2033578045]
+[node name="Chain5" type="Node3D" parent="." unique_id=2033578045 node_paths=PackedStringArray("target_node")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.04294, 2.83522, -1.56389)
 script = ExtResource("1")
 mesh = ExtResource("5")
-target_path = NodePath("../Suzanne/Anchor006")
+target_node = NodePath("../Suzanne")
 length = 4.453
 width = 0.33
 swing_frequency = 1.0
 
-[node name="Chain6" type="Node3D" parent="." unique_id=1837400303]
+[node name="Chain6" type="Node3D" parent="." unique_id=1837400303 node_paths=PackedStringArray("target_node")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.15073, 2.8629, -3.79759)
 script = ExtResource("1")
 mesh = ExtResource("5")
-target_path = NodePath("../Suzanne/Anchor007")
+target_node = NodePath("../Suzanne")
 length = 4.052
 width = 0.33
 swing_frequency = 1.0
 
-[node name="Chain7" type="Node3D" parent="." unique_id=630912861]
+[node name="Chain7" type="Node3D" parent="." unique_id=630912861 node_paths=PackedStringArray("target_node")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.69992, 2.93042, -0.691847)
 script = ExtResource("1")
 mesh = ExtResource("5")
-target_path = NodePath("../Suzanne/Anchor008")
+target_node = NodePath("../Suzanne")
 length = 4.043
 width = 0.25
 swing_frequency = 1.0
 
-[node name="Chain8" type="Node3D" parent="." unique_id=1415676012]
+[node name="Chain8" type="Node3D" parent="." unique_id=1415676012 node_paths=PackedStringArray("target_node")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.12478, 2.86102, -3.90132)
 script = ExtResource("1")
 mesh = ExtResource("5")
-target_path = NodePath("../Suzanne/Anchor009")
+target_node = NodePath("../Suzanne")
 width = 0.33
 swing_frequency = 1.0
 
 [node name="Suzanne" type="MeshInstance3D" parent="." unique_id=1074415974]
-transform = Transform3D(0.9266813352404257, -0.10747695527606128, 0.3601506641366573, 0.19568263487798312, 0.9560866260120912, -0.21818066266859085, -0.3208865464462964, 0.2726591771945592, 0.9070206732028876, -0.2067571899800376, 1.1515493015973188, 0.0010645577271634551)
+transform = Transform3D(0.8130448094740802, 0.0336121486046154, 0.5812283567827857, -0.16839716044273662, 0.969234051225796, 0.17950997631615134, -0.5573138258719939, -0.24382685798251008, 0.793692364668174, -0.16967899502082545, 1.2264933264961522, -0.12897421812681198)
 mesh = ExtResource("6")
 script = ExtResource("3")
 
